@@ -8,6 +8,7 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 })
 export class AppComponent implements OnInit {
   public nuevoArreglo: string[] = [];
+  public log: any[] = [];
   private ex1: any[];
   private ex2: any[];
   private ex3: any[];
@@ -43,9 +44,11 @@ export class AppComponent implements OnInit {
         next: (key) => {
               keys.push(key);
               console.log('key :>> ', key);
+              this.log.push(key);
         },
         complete: () => {
               console.log('keys :>> ', keys);
+              this.log.push('GetDataKey');
               this.GetDataKey(keys);
         }
     });
@@ -54,9 +57,11 @@ export class AppComponent implements OnInit {
   private GetDataKey(keys: string[]): void {
     keys.forEach((key) => {
       console.log('element :>> ', key);
+      this.log.push('element ' + key);
       this.storageHelper.get(key).subscribe({
         next: (data) => {
             console.log('data :>> ', data);
+            this.log.push('data', data);
             if (Array.isArray(data)) {
               this.getDataArray(data);
             } else {
@@ -66,10 +71,12 @@ export class AppComponent implements OnInit {
             }
         },
         complete: () => {
+          this.log.push('termino acá');
           console.log('termino acá');
         }
       });
     });
+    this.log.push('Generando datos');
     console.log('Generando datos');
   }
 
@@ -83,6 +90,8 @@ export class AppComponent implements OnInit {
       });
       this.nuevoArreglo.push(item);
     });
+    this.log.push('nuevo arreglo ', this.nuevoArreglo);
+    console.log('this.nuevoArreglo :>> ', this.nuevoArreglo);
   }
 
 }
